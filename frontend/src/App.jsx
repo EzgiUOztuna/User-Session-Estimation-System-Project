@@ -8,7 +8,7 @@ function App() {
     fetch('http://localhost:8080/api.php')
       .then(response => response.json())
       .then(data => {
-        console.log(data); // Veriyi konsola yazdırarak ne geldiğini kontrol edin.
+        console.log(data); // Verilerin kontrolü amaçlı.
         setUsers(Array.isArray(data) ? data : []); // Eğer dizi değilse, boş dizi olarak set et
       })
       .catch(error => console.error('Veri çekilirken hata oluştu:', error));
