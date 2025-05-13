@@ -8,41 +8,37 @@ function App() {
     fetch('http://localhost:8080/api.php')
       .then(response => response.json())
       .then(data => {
-        console.log(data); // Verilerin kontrolü amaçlı.
-        setUsers(Array.isArray(data) ? data : []); // Eğer dizi değilse, boş dizi olarak set et
+        console.log(data);
+        setUsers(Array.isArray(data) ? data : []);
       })
       .catch(error => console.error('Veri çekilirken hata oluştu:', error));
   }, []);
 
-
-
-  return <>
-    <div className="App">
-      <h1>Kullanıcı Login Saatleri</h1>
-      <table border="1">
+  return (
+    <div className="container">
+      <h1>Kullanıcı Login Tahmin Sistemi</h1>
+      <table>
         <thead>
           <tr>
-            <th>Kullanıcı</th>
-            <th>Login Saatleri</th>
+            <th>İsim</th>
+            <th>Son Giriş</th>
+            <th>Ortalama Aralık Tahmini</th>
+            <th>Ertesi Gün Aynı Saat</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>
               <td>{user.name}</td>
-              <td>
-                <ul>
-                  {user.logins.map((login, index) => (
-                    <li key={index}>{login}</li>
-                  ))}
-                </ul>
-              </td>
+              <td>{new Date(user.last_login).toLocaleString()}</td>
+              <td>{new Date(user.predictions.average_interval).toLocaleString()}</td>
+              <td>{new Date(user.predictions.next_day_same_time).toLocaleString()}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-  </>
+  );
 }
 
 export default App;
