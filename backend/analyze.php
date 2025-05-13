@@ -6,14 +6,12 @@ $rows = $data["data"]["rows"];
 foreach ($rows as $user) {
     $name = $user["name"];
     $logins = $user["logins"];
-    echo "<br>";
-    echo "Kullanıcı: $name" . "<br>";
+    echo "<br><br>" . "Kullanıcı: $name" . "<br>";
 
-    $hours = []; //prediction için
+    $hours = [];
     $days = [];
     $intervals = [];
     $loginWeekdays = []; //prediction için
-    $activeHours = [];
 
     $prevTime = null;
     foreach ($logins as $login) {
@@ -21,10 +19,8 @@ foreach ($rows as $user) {
 
         // Saat ve gün analizleri
         $hours[] = $dt->format('H'); //prediction için
-        $activeHours[] = $dt->format('H:i');
-        $days[] = $dt->format('Y-m-d');
-        $loginWeekdays[] = $dt->format('l'); //prediction için
-
+        $days[] = $dt->format('Y-m-d'); //tam tarih bazında.
+        $loginWeekdays[] = $dt->format('l'); //gün bazında (prediction için)
 
         // Girişler arası süre farkı (saniye)
         if ($prevTime) {
@@ -35,44 +31,41 @@ foreach ($rows as $user) {
     }
 
     // En sık login olunan saatler
-    $hourFreq = array_count_values($activeHours);
+    $hourFreq = array_count_values($hours);
     arsort($hourFreq);
     echo "En yoğun saat: " . array_key_first($hourFreq) . "<br>";
 
     // En aktif günler
     $dayFreq = array_count_values($days); //dizideki elemanların kaç kez tekrarlandığını say.
     arsort($dayFreq); //büyükten küçüğe sırala.
-    echo "En aktif gün: " . array_key_first($dayFreq) . "<br>";
+    echo "En aktif gün: " . array_key_first($dayFreq) . "<br>"; // En aktif tarih (tam tarih bazında en sık giriş yapılan gün)
+
 
     // Ortalama giriş aralığı (saniye cinsinden)
     $avgInterval = array_sum($intervals) / count($intervals);
     echo "Ortalama tekrar süresi (dk): " . round($avgInterval / 60, 2) . "<br>";
 
+
     //📍Yaklaşımlar
     /*1️⃣. Ortalama Aralık Yöntemi:
     Kullanıcının iki login arasındaki ortalama süre hesaplanır. Son login'e bu süre eklenerek bir sonraki tahmini login zamanı elde edilir.*/
-    $intervals = [];
-    for ($i = 1; $i < count($logins); $i++) {
-        $t1 = new DateTime($logins[$i - 1]);
-        $t2 = new DateTime($logins[$i]);
-        $intervals[] = $t2->getTimestamp() - $t1->getTimestamp();
-    }
-
     $avgSeconds = array_sum($intervals) / count($intervals);
     $lastLogin = new DateTime(end($logins));
     $predictedNext1 = clone $lastLogin;
     $predictedNext1->modify("+$avgSeconds seconds");
 
-    echo "Tahmini login zamanı (Ortalama Aralık): " . $predictedNext1->format("Y-m-d H:i:s");
-    echo "<br>";
+    echo "Tahmini login zamanı (Ortalama Aralık): " . $predictedNext1->format("Y-m-d H:i:s") . "<br>";
+
 
     /*2️⃣. Gün + Saat Patern Yöntemi: 
     Kullanıcı en çok hangi gün ve saatte giriş yapıyorsa, o gün + saat paterni tekrar eder varsayımıyla tahmin yapılır.*/
     $mostCommonHour = (int)array_key_first($hourFreq);
-    $mostCommonDay = array_key_first(array_count_values($loginWeekdays));
+    $mostCommonDay = array_key_first(array_count_values($loginWeekdays)); //Haftanın en sık giriş yapılan günü (örn. Monday)
 
     $today = new DateTime();
     while ($today->format('l') !== $mostCommonDay) {
         $today->modify('+1 day'); // Bugün en sık giriş günü değilse 1 gün ilerle
     }
     $predictedNext2 = $today->setTime($mostCommonHour, 0, 0); //tahmin edilen günün (saat,dk,sn) ayarlaması.
+    echo "Tahmini login zamanı (Gün + Saat paterni): " . $predictedNext2->format("Y-m-d H:i:s") . "<br>";
+}
