@@ -1,10 +1,10 @@
 <?php
-// CORS başlıkları ekle
-header("Access-Control-Allow-Origin: *");
+// CORS hataları için başlıklar
+header("Access-Control-Allow-Origin: *"); //Tüm domain'lerden gelen istekleri kabul et
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-//case-test-api.humanas.io adresinden JSON verisini alma
+//case-test-api.humanas.io adresinden JSON verisi alma
 $jsonData = file_get_contents('https://case-test-api.humanas.io/');
 //from JSON data to PHP string
 $phpData = json_decode($jsonData, true);
