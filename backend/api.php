@@ -4,7 +4,7 @@ header("Access-Control-Allow-Origin: *"); //Tüm domain'lerden gelen istekleri k
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-//case-test-api.humanas.io adresinden JSON verisi alma
+//belirtilen adresden JSON verisi al
 $jsonData = file_get_contents('https://case-test-api.humanas.io/');
 //from JSON data to PHP string
 $phpData = json_decode($jsonData, true);
