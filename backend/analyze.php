@@ -14,7 +14,6 @@ foreach ($rows as $user) {
     $intervals = [];
 
     $prevTime = null;
-
     foreach ($logins as $login) {
         $dt = new DateTime($login);
 
@@ -41,7 +40,7 @@ foreach ($rows as $user) {
     echo "En aktif gün: " . array_key_first($dayFreq) . "<br>";
 
     // Ortalama giriş aralığı (saniye cinsinden)
-    $avgInterval = count($intervals) ? array_sum($intervals) / count($intervals) : 0;
+    $avgInterval = array_sum($intervals) / count($intervals);
     echo "Ortalama tekrar süresi (dk): " . round($avgInterval / 60, 2) . "<br>";
     echo "<br>";
 }
