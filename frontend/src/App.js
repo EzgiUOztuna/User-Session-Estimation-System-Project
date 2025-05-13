@@ -5,7 +5,7 @@ function App() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost/User-Session-Estimation-System-Project/backend/api.php')
+    fetch('http://localhost:8080/api.php')
       .then(response => response.json())
       .then(data => setUsers(data));
   }, []);
