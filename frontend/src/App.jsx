@@ -16,16 +16,29 @@ function App() {
 
   return (
     <>
-      <div className='user-container'>
-        {users.map((user, index) => (
-          <div key={index} className='user-card'>
-            <h3>{user.name}</h3>
-            <p>Son login: {user.lastLogin}</p>
-            <p>Tahmin 1 (Ortalama Aralık): {user.predictionAvgInterval}</p>
-            <p>Tahmin 2 (Patern): {user.predictionPattern}</p>
-          </div>
-        ))}
+      <div className='container'>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Last Login</th>
+              <th>Prediction 1 (Avg Interval)</th>
+              <th>Prediction 2(Pattern)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user, index) => (
+              <tr key={index}>
+                <td >{user.name}</td>
+                <td >{user.lastLogin}</td>
+                <td >{user.predictionAvgInterval}</td>
+                <td >{user.predictionPattern}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
+
     </>
   )
 }
