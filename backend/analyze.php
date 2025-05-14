@@ -4,8 +4,7 @@ header("Access-Control-Allow-Origin: *"); //Tüm domain'lerden gelen istekleri k
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-$json = file_get_contents("http://localhost/User-Session-Estimation-System-Project/backend/index
-.php");
+$json = file_get_contents("http://localhost/User-Session-Estimation-System-Project/backend/api.php");
 $data = json_decode($json, true);
 $rows = $data["data"]["rows"];
 
